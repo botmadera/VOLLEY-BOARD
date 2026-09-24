@@ -8,10 +8,12 @@ guardan en el navegador para volver a abrirlas.
 Estética de pantalla E-Ink: alto contraste, tipografía monoespaciada y cero
 animaciones.
 
+**Probala online:** https://botmadera.github.io/VOLLEY-BOARD/
+
 ## Uso
 
-Abrí `index.html` en el navegador (doble clic). No hace falta instalar nada: no
-hay build, ni npm, ni servidor.
+Abrí la página online, o `index.html` en el navegador (doble clic). No hace
+falta instalar nada: no hay build, ni npm, ni servidor.
 
 1. Pegá o escribí la lista, un nombre por línea (ver `data/team.txt`).
 2. **Generar jugadores**: cada jugador es una ficha con su nombre truncado a 4

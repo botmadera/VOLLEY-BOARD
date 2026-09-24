@@ -12,7 +12,7 @@ A single-page web app for a volleyball coach: paste a roster, drag six players o
 
 ## Public repo — no real data
 
-Published as a public repo at `github.com/botmadera/VOLLEY-BOARD` (MIT). The names in `data/team.txt`, the tests and the `index.html` placeholder are **fictional** stand-ins for a real roster (which included minors): they keep every property the tests rely on (the `Ramiro`/`Ramírez` → `RAMI` collision, an accent in `Sofía`, a `Nina D` two-word name, a surname-only entry). **Never commit a real roster**, and commit with the GitHub noreply address, not a personal email.
+Published as a public repo at `github.com/botmadera/VOLLEY-BOARD` (MIT), served by GitHub Pages from `main` at the repo root — https://botmadera.github.io/VOLLEY-BOARD/. **Every push to `main` deploys**, so the app must keep working from a static root with no build step. The names in `data/team.txt`, the tests and the `index.html` placeholder are **fictional** stand-ins for a real roster (which included minors): they keep every property the tests rely on (the `Ramiro`/`Ramírez` → `RAMI` collision, an accent in `Sofía`, a `Nina D` two-word name, a surname-only entry). **Never commit a real roster**, and commit with the GitHub noreply address, not a personal email.
 
 ## Running it
 
