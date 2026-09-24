@@ -77,7 +77,6 @@ const openPage = async (storage) => {
   const panelChips = $$(".panel .player");
   check("9 circulos en el panel", panelChips.length === 9,
     panelChips.map((c) => c.textContent).join(" "));
-  check("divisor de grupo pintado", $$(".roster__group").length === 1);
   check("boton rotaciones deshabilitado sin 6 en cancha", $("#btn-rotations").disabled);
   check("contador inicial", $("#counter").textContent === "0/6 en cancha",
     $("#counter").textContent);
@@ -142,7 +141,7 @@ const openPage = async (storage) => {
   check("6 cards", cards.length === 6, String(cards.length));
   check("R1 = posicion inicial",
     read(cards[0]) === "VERA TOBI NINA R33 PILI RAMI", read(cards[0]));
-  check("R2 = segundo bloque de team.txt",
+  check("R2 = segundo bloque de la hoja a mano",
     read(cards[1]) === "R33 VERA TOBI PILI RAMI NINA", read(cards[1]));
   check("cards de solo lectura (sin draggable)",
     !cards.some((c) => c.querySelector(".player[draggable='true']")));

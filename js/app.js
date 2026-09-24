@@ -218,11 +218,6 @@ window.CB = window.CB || {};
     }
 
     state.roster.forEach(function (item) {
-      if (item.kind === "group") {
-        dom.rosterList.appendChild(UI.el("h3", "roster__group", item.name));
-        return;
-      }
-
       var row = UI.el("div", "roster__item");
       row.appendChild(
         UI.playerChip(item, {

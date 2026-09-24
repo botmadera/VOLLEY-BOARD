@@ -1,31 +1,9 @@
-
-
-1.⁠ ⁠Ramiro
-2.⁠ ⁠Tobi
-3.⁠ ⁠Ramírez
-4.⁠ ⁠Acosta
-
-Niñas
-1.⁠ ⁠Irma
-2.⁠ ⁠Pili 
-3.⁠ ⁠Vera 
-4.⁠ ⁠Nina D
-5.⁠ ⁠Sofía 
-
-
- TOB	NIN	RAM
- VER	R33	PIL
-|--------------------|
-
-
- VER	TOB	NIN
- R33	PIL	RAM
-|--------------------|
-
- VER	TOB	NIN
- R33	PIL	RAM
-|--------------------|
-
- VER	TOB	NIN
- R33	PIL	RAM
-|--------------------|
+Ramiro
+Tobi
+Ramírez
+Acosta
+Irma
+Pili
+Vera
+Nina D
+Sofía

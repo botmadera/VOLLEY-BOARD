@@ -8,11 +8,11 @@ The owner works from several machines. Anything worth remembering about this pro
 
 ## What this is
 
-A single-page web app for a volleyball coach: paste a roster, drag six players onto the court to set the starting lineup, and generate the six rotations as cards. Rosters and their starting positions can be saved in the browser and reopened. It replaces the hand-drawn process captured in `data/team.txt`.
+A single-page web app for a volleyball coach: paste a roster, drag six players onto the court to set the starting lineup, and generate the six rotations as cards. Rosters and their starting positions can be saved in the browser and reopened. It replaces a coach's hand-drawn rotation sheets.
 
 ## Public repo — no real data
 
-Published as a public repo at `github.com/botmadera/VOLLEY-BOARD` (MIT), served by GitHub Pages from `main` at the repo root — https://botmadera.github.io/VOLLEY-BOARD/. **Every push to `main` deploys**, so the app must keep working from a static root with no build step. The names in `data/team.txt`, the tests and the `index.html` placeholder are **fictional** stand-ins for a real roster (which included minors): they keep every property the tests rely on (the `Ramiro`/`Ramírez` → `RAMI` collision, an accent in `Sofía`, a `Nina D` two-word name, a surname-only entry). **Never commit a real roster**, and commit with the GitHub noreply address, not a personal email.
+Published as a public repo at `github.com/botmadera/VOLLEY-BOARD` (MIT), served by GitHub Pages from `main` at the repo root — https://botmadera.github.io/VOLLEY-BOARD/. **Every push to `main` deploys**, so the app must keep working from a static root with no build step. The names in `data/team.txt`, the tests and the `index.html` placeholder are **fictional** stand-ins for a real roster (which included minors): they keep every property the tests rely on (the `Ramiro`/`Ramírez` → `RAMI` collision, an accent in `Sofía`, a `Nina D` two-word name, a surname-only entry). The app is meant for generic use, so the examples stay generic too. **Never commit a real roster**, and commit with the GitHub noreply address, not a personal email.
 
 ## Running it
 
@@ -29,7 +29,7 @@ npm install && npm test     # incluye el flujo en jsdom
 
 `package.json` exists **only for the tests** — the app itself must never require npm.
 
-- `test/logic.test.js` loads `js/rotations.js` / `js/roster.js` / `js/storage.js` into a `vm` context and asserts against `data/team.txt`. Zero dependencies. `-v` prints the full rotation sequence.
+- `test/logic.test.js` loads `js/rotations.js` / `js/roster.js` / `js/storage.js` into a `vm` context and asserts against `data/team.txt` (a plain list of 9 names). Zero dependencies. `-v` prints the full rotation sequence.
 - `test/dom.test.js` drives the real page through `JSDOM.fromFile`, clicking through paste → generate players → edit label → place six → generate rotations → clear → save/open/delete templates → reload.
 
 Neither environment has a real `localStorage`, so both inject an in-memory double: `logic.test.js` puts one in the `vm` sandbox (with a `fail` flag to exercise the quota-exceeded path), `dom.test.js` injects one through JSDOM's `beforeParse` hook. The DOM one is deliberately shared between two `JSDOM` instances — that is how "reload the browser" is simulated. Do not rely on jsdom's own `localStorage`: the page is loaded from `file://`, an opaque origin where it may be unavailable.
@@ -98,24 +98,20 @@ Regulation numbering, net at top:
 
 Clockwise rotation follows `CYCLE = [1, 6, 5, 4, 3, 2]` — each player moves to the next position in that cycle. `GRID_ORDER = [4, 3, 2, 5, 6, 1]` is the paint order (front row first).
 
-This is not a guess. The first two blocks of `data/team.txt` are a real hand-written transition, and they match the model in all six positions:
+This is not a guess. The coach's original hand-drawn sheet had a real transition, and it matches the model in all six positions (labels anonymised; the blocks are hard-coded in `test/logic.test.js`):
 
 ```
 TOB NIN RAM      VER TOB NIN
 VER R33 PIL  →   R33 PIL RAM
 ```
 
-**Acceptance test for any change to rotation logic:** starting from front `VER TOB NIN` / back `R33 PIL RAM`, R2 must equal that second block. Blocks 3 and 4 in the file are duplicates of block 2 — an unfinished sheet, not evidence.
+**Acceptance test for any change to rotation logic:** starting from front `VER TOB NIN` / back `R33 PIL RAM`, R2 must equal that second block.
 
 ## Roster parsing
 
-`data/team.txt` must paste in verbatim and yield 9 players. That drives three rules in `parseRoster`:
+**The input is a plain list of names, one per line — nothing else.** Lines are trimmed and blank lines skipped; every other line is a player, verbatim. No numbering, no group headers, no chat-format cleanup: an earlier version tried to understand WhatsApp-style lists (`1. - Name`, section headers, the match header) and it was dropped on purpose — the app is generic and whoever uses it adapts their list. Don't reintroduce format guessing.
 
-- The file has U+2060 WORD JOINER embedded in its numbering — invisible characters are stripped first.
-- If the text contains **any** numbered lines, unnumbered lines (`Niñas`) are group headers, not players. If nothing is numbered, every line is a player (hand-typed lists).
-- Lines with a tab or 3+ whitespace-separated columns are already-drawn rotation blocks and are skipped, so pasting the whole file works.
-
-Labels are the first 4 alphanumeric characters, accents stripped, uppercased. `Ramiro` and `Ramírez` both give `RAMI`; duplicates get a dashed border so the coach resolves them by hand (that's where the file's `R33` comes from). Hand-edited labels set `labelEdited` and survive re-parsing, keyed by player name.
+Labels are the first 4 alphanumeric characters, accents stripped, uppercased. `Ramiro` and `Ramírez` both give `RAMI`; duplicates get a dashed border so the coach resolves them by hand (the tests edit `Ramírez` to `R33`). Hand-edited labels set `labelEdited` and survive re-parsing, keyed by player name.
 
 ## Design constraints (`Requirements/theme.txt`)
 
@@ -131,7 +127,7 @@ Otherwise unchanged: 2px borders, buttons that invert on `:active`, `img { filte
 
 Selection state is rendered as a full color inversion, and "already on court" as a switch to `--eink-accent` — never opacity fades or shadows. The open template (`.saved__item.is-current`) and an armed delete button (`.is-confirming`) follow the same rule.
 
-`theme.css` styles by element, not by class, and has nothing for `<select>` or `<dialog>` — both would fall back to the OS-native control and leave the E-Ink look. The saved list uses plain `<button>`s instead. `.saved__open` deliberately drops the theme's 2px border (a column of bordered buttons swamps the panel) and `.saved__title` duplicates `.roster__group`'s look rather than reusing the class, because `dom.test.js` counts `.roster__group` to check the roster's group divider.
+`theme.css` styles by element, not by class, and has nothing for `<select>` or `<dialog>` — both would fall back to the OS-native control and leave the E-Ink look. The saved list uses plain `<button>`s instead. `.saved__open` deliberately drops the theme's 2px border (a column of bordered buttons swamps the panel) and `.saved__title` is a small uppercase divider in `--eink-accent`.
 
 ## Interaction
 

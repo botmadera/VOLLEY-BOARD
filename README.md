@@ -15,7 +15,8 @@ animaciones.
 Abrí la página online, o `index.html` en el navegador (doble clic). No hace
 falta instalar nada: no hay build, ni npm, ni servidor.
 
-1. Pegá o escribí la lista, un nombre por línea (ver `data/team.txt`).
+1. Pegá o escribí la lista: un nombre por línea, nada más (ver
+   `data/team.txt`).
 2. **Generar jugadores**: cada jugador es una ficha con su nombre truncado a 4
    letras. Las etiquetas se pueden editar a mano.
 3. Llevá seis fichas a la cancha arrastrando, o tocando la ficha y después la

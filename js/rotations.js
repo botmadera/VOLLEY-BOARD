@@ -11,7 +11,8 @@ window.CB = window.CB || {};
    *     P5     P6     P1     zona zaguera
    *
    * El giro horario mueve a cada jugador al siguiente puesto de este ciclo.
-   * Validado contra los dos primeros bloques de data/team.txt. */
+   * Validado contra una transicion dibujada a mano por el entrenador (ver
+   * el test de aceptacion en test/logic.test.js). */
   var CYCLE = [1, 6, 5, 4, 3, 2];
 
   /* Orden de pintado de la cancha: fila delantera arriba, zaguera abajo. */

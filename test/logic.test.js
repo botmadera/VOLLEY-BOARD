@@ -1,4 +1,5 @@
-/* Logica pura (rotations.js + roster.js + storage.js) contra data/team.txt.
+/* Logica pura (rotations.js + roster.js + storage.js) contra data/team.txt
+   (una lista de nombres, uno por linea).
    Sin dependencias: node test/logic.test.js */
 const fs = require("fs");
 const vm = require("vm");
@@ -37,19 +38,16 @@ const check = (name, ok, extra) => {
   if (!ok) { fails++; if (extra) console.log("      " + extra); }
 };
 
-/* --- 1. parseo de data/team.txt pegado tal cual --------------------------- */
+/* --- 1. parseo de data/team.txt ------------------------------------------ */
 const raw = fs.readFileSync(path.join(root, "data/team.txt"), "utf8");
 const roster = CB.roster.parseRoster(raw);
 const players = CB.roster.players(roster);
-const groups = roster.filter((i) => i.kind === "group");
 
 check("9 jugadores desde team.txt", players.length === 9,
   players.map((p) => `${p.name}|${p.label}`).join(", "));
-check("'Ninas' es grupo, no jugador",
-  groups.length === 1 && groups[0].name === "Niñas",
-  JSON.stringify(groups));
-check("los bloques de rotacion pegados se ignoran",
-  !players.some((p) => /^(TOB|NIN|RAM|VER|R33|PIL)$/.test(p.name)));
+check("una linea = un jugador, sin interpretar nada",
+  CB.roster.players(CB.roster.parseRoster("  Ana \n\n1. Beto\nNiñas\n")).map((p) => p.name)
+    .join("|") === "Ana|1. Beto|Niñas");
 
 /* --- 2. etiquetas --------------------------------------------------------- */
 const lbl = (n) => players.find((p) => p.name === n).label;
@@ -66,24 +64,22 @@ check("etiqueta editada sobrevive al re-parseo", (() => {
   const ramirez = CB.roster.players(again).find((p) => p.name === "Ramírez");
   return CB.roster.byId(again, ramirez.id).label === "R33";
 })());
-check("lista sin numerar: cada linea es un jugador",
-  CB.roster.players(CB.roster.parseRoster("Ana\nBeto\nCarla")).length === 3);
 
-/* --- 3. rotacion: R2 debe ser el 2o bloque de team.txt --------------------
-   Este es el test de aceptacion. La transicion entre los dos primeros
-   bloques de data/team.txt esta escrita a mano por el entrenador y fija el
-   sentido del giro; si esto falla, el modelo esta mal. */
+/* --- 3. rotacion: test de aceptacion --------------------------------------
+   Estos dos bloques salen de una hoja dibujada a mano por el entrenador, la
+   que dio origen a la app, y fijan el sentido del giro; si esto falla, el
+   modelo esta mal. */
 const R = CB.rotations;
 const show = (l) => R.GRID_ORDER.map((p) => l[p]).join(" ");
 
-// Posicion inicial del archivo: delantera VER TOB NIN / zaguera R33 PIL RAM
+// Posicion inicial de la hoja: delantera VER TOB NIN / zaguera R33 PIL RAM
 const lineup0 = { 4: "VER", 3: "TOB", 2: "NIN", 5: "R33", 6: "PIL", 1: "RAM" };
 const rots = R.allRotations(lineup0);
 check("R1 = posicion inicial", show(rots[0]) === "VER TOB NIN R33 PIL RAM", show(rots[0]));
 
-// Bloque 1 de team.txt rotado una vez debe dar el bloque 2.
+// Bloque 1 de la hoja rotado una vez debe dar el bloque 2.
 const bloque1 = { 4: "TOB", 3: "NIN", 2: "RAM", 5: "VER", 6: "R33", 1: "PIL" };
-check("bloque1 + 1 giro horario == bloque2 de team.txt",
+check("bloque1 + 1 giro horario == bloque2 de la hoja",
   show(R.rotate(bloque1, 1)) === "VER TOB NIN R33 PIL RAM",
   `obtenido: ${show(R.rotate(bloque1, 1))}`);
 
@@ -116,7 +112,7 @@ check("spotsOf -> lineupFrom conserva las 6 posiciones",
 
 check("los nombres sobreviven al desplazamiento de ids", (() => {
   /* Un jugador nuevo al principio corre todos los ids: p1 pasa a ser p2. */
-  const movido = CB.roster.parseRoster("1. Nuevo\n" + raw);
+  const movido = CB.roster.parseRoster("Nuevo\n" + raw);
   const lineup = S.lineupFrom(spots, movido);
   return R.GRID_ORDER.every((pos) => {
     const p = CB.roster.byId(movido, lineup[pos]);

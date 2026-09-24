@@ -49,8 +49,6 @@
   margin-top: 1.5em;
 }
 
-/* Mismo aspecto que .roster__group, pero clase propia: el divisor de grupo
-   de la plantilla se cuenta en los tests. */
 .saved__title {
   font-size: 0.7rem;
   text-transform: uppercase;
@@ -128,16 +126,6 @@
 
 .roster {
   margin-top: 1.5em;
-}
-
-.roster__group {
-  font-size: 0.7rem;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  color: var(--eink-accent);
-  border-bottom: 1px solid var(--eink-accent);
-  margin: 1.25em 0 0.6em;
-  padding-bottom: 0.2em;
 }
 
 .roster__item {

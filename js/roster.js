@@ -6,27 +6,7 @@ window.CB = window.CB || {};
 
   var LABEL_LEN = 4;
 
-  /* data/team.txt trae WORD JOINER (U+2060) incrustado en la numeracion.
-   * Se limpia antes de nada para que pegar el archivo tal cual funcione. */
-  var INVISIBLES = new RegExp(
-    "[\\u00AD\\u200B-\\u200F\\u202A-\\u202E\\u2060-\\u2064\\uFEFF]",
-    "g"
-  );
-  var NBSP = new RegExp("[\\u00A0\\u2007\\u202F]", "g");
   var COMBINING = new RegExp("[\\u0300-\\u036F]", "g");
-  var NUMBERING = /^\s*\d+\s*[.)\-º]?\s*/;
-  var SEPARATOR = /^[\s|+\-_=*.]*$/;
-
-  function clean(line) {
-    return line.replace(INVISIBLES, "").replace(NBSP, " ").trim();
-  }
-
-  /* Una linea con tabulador o con 3+ columnas es un bloque de rotacion ya
-   * dibujado a mano (" TOB  NIN  RAM"), no parte de la plantilla. */
-  function looksLikeBlock(line) {
-    if (line.indexOf("\t") !== -1) return true;
-    return line.split(/\s{2,}/).length >= 3;
-  }
 
   function makeLabel(name) {
     var flat = name
@@ -37,7 +17,9 @@ window.CB = window.CB || {};
     return flat.slice(0, LABEL_LEN) || "?";
   }
 
-  /* Devuelve [{ kind:'group', name } | { kind:'player', id, name, label, labelEdited }].
+  /* Una linea = un jugador; las lineas vacias se ignoran. Nada mas: ni
+   * numeracion, ni grupos. Quien pegue otro formato limpia la lista antes.
+   * Devuelve [{ kind:'player', id, name, label, labelEdited }].
    * previous: lista anterior, para conservar las etiquetas editadas a mano. */
   function parseRoster(text, previous) {
     var kept = {};
@@ -45,39 +27,21 @@ window.CB = window.CB || {};
       if (item.kind === "player" && item.labelEdited) kept[item.name] = item.label;
     });
 
-    var lines = String(text || "")
+    return String(text || "")
       .split("\n")
-      .map(clean)
-      .filter(function (l) {
-        return l && !SEPARATOR.test(l) && !looksLikeBlock(l);
+      .map(function (l) {
+        return l.trim();
+      })
+      .filter(Boolean)
+      .map(function (name, i) {
+        return {
+          kind: "player",
+          id: "p" + (i + 1),
+          name: name,
+          label: kept[name] || makeLabel(name),
+          labelEdited: Object.prototype.hasOwnProperty.call(kept, name)
+        };
       });
-
-    /* Si la lista viene numerada, las lineas sin numero son encabezados de
-     * grupo ("Ninas"). Si no hay numeracion en ninguna parte, cada linea es
-     * un jugador escrito a mano. */
-    var numbered = lines.some(function (l) {
-      return NUMBERING.test(l);
-    });
-
-    var out = [];
-    var seq = 0;
-    lines.forEach(function (line) {
-      if (numbered && !NUMBERING.test(line)) {
-        out.push({ kind: "group", name: line });
-        return;
-      }
-      var name = line.replace(NUMBERING, "").trim();
-      if (!name) return;
-      seq++;
-      out.push({
-        kind: "player",
-        id: "p" + seq,
-        name: name,
-        label: kept[name] || makeLabel(name),
-        labelEdited: Object.prototype.hasOwnProperty.call(kept, name)
-      });
-    });
-    return out;
   }
 
   function players(roster) {
