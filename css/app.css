@@ -1,0 +1,339 @@
+/* ==========================================================================
+   COACH BOARD — layout panel + cancha
+   Depende de css/theme.css (variables y reglas base E-Ink).
+   ========================================================================== */
+
+.app {
+  display: grid;
+  grid-template-columns: 300px 1fr;
+  min-height: 100vh;
+}
+
+/* ------------------------------------------------------------------ panel */
+
+.panel {
+  border-right: 2px solid var(--eink-border);
+  padding: 20px;
+}
+
+.panel h1 {
+  font-size: 1.1rem;
+  margin: 0 0 1em;
+  letter-spacing: 0.15em;
+  border-bottom: 2px solid var(--eink-border);
+  padding-bottom: 0.5em;
+}
+
+.panel h2,
+.main h2 {
+  font-size: 0.8rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  margin: 0 0 0.75em;
+}
+
+#roster-input {
+  width: 100%;
+  resize: vertical;
+  margin-bottom: 10px;
+}
+
+.hint {
+  font-size: 0.8rem;
+  color: var(--eink-accent);
+}
+
+/* -------------------------------------------------------------- guardadas */
+
+.saved {
+  margin-top: 1.5em;
+}
+
+/* Mismo aspecto que .roster__group, pero clase propia: el divisor de grupo
+   de la plantilla se cuenta en los tests. */
+.saved__title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--eink-accent);
+  border-bottom: 1px solid var(--eink-accent);
+  margin: 0 0 0.6em;
+  padding-bottom: 0.2em;
+}
+
+.saved__form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 0.5em;
+}
+
+.saved__input {
+  width: 100%;
+  border-width: 1px;
+  padding: 4px 6px;
+  font-size: 0.75rem;
+}
+
+.saved__item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 0;
+}
+
+/* Boton de texto: una lista de botones con el borde de 2px del tema
+   saturaria el panel. */
+.saved__open {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  padding: 3px 4px;
+  text-align: left;
+  font-size: 0.8rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+.saved__item--lineup {
+  padding-left: 14px;
+}
+
+.saved__item--lineup .saved__open {
+  font-size: 0.75rem;
+  color: var(--eink-accent);
+}
+
+/* Plantilla abierta y boton pulsado: inversion total, como .player.is-selected */
+.saved__open:active,
+.saved__item--lineup .saved__open:active,
+.saved__item.is-current > .saved__open {
+  background-color: var(--eink-text);
+  color: var(--eink-bg);
+}
+
+.saved__del {
+  flex: none;
+  border-width: 1px;
+  padding: 2px 6px;
+  font-size: 0.7rem;
+}
+
+.saved__del.is-confirming {
+  background-color: var(--eink-text);
+  color: var(--eink-bg);
+}
+
+.roster {
+  margin-top: 1.5em;
+}
+
+.roster__group {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--eink-accent);
+  border-bottom: 1px solid var(--eink-accent);
+  margin: 1.25em 0 0.6em;
+  padding-bottom: 0.2em;
+}
+
+.roster__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 4px 0;
+}
+
+.roster__meta {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  min-width: 0;
+}
+
+.roster__name {
+  font-size: 0.9rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.roster__label {
+  width: 5ch;
+  padding: 2px 4px;
+  border-width: 1px;
+  text-align: center;
+  font-size: 0.7rem;
+}
+
+/* ------------------------------------------------------------------- main */
+
+.main {
+  padding: 20px;
+  min-width: 0;
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 1.5em 0;
+}
+
+.controls__input {
+  width: 16ch;
+  border-width: 1px;
+  padding: 4px 6px;
+  font-size: 0.75rem;
+}
+
+.counter {
+  font-size: 0.8rem;
+  color: var(--eink-accent);
+  font-family: var(--eink-font);
+}
+
+/* ----------------------------------------------------------------- cancha */
+
+.court {
+  border: 2px solid var(--eink-border);
+  width: 100%;
+  max-width: 460px;
+  background-color: var(--eink-bg);
+}
+
+.net {
+  border-bottom: 4px double var(--eink-border);
+  text-align: center;
+  padding: 2px 0;
+}
+
+.net__label {
+  font-family: var(--eink-font);
+  font-size: 0.6rem;
+  letter-spacing: 0.3em;
+  color: var(--eink-accent);
+}
+
+.court__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+}
+
+.cell {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 110px;
+  border: 1px dashed var(--eink-accent);
+}
+
+.cell__num {
+  position: absolute;
+  top: 3px;
+  left: 5px;
+  font-family: var(--eink-font);
+  font-size: 0.6rem;
+  color: var(--eink-accent);
+}
+
+/* --------------------------------------------------------------- jugador */
+
+.player {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 62px;
+  height: 62px;
+  flex: none;
+  border: 2px solid var(--eink-border);
+  border-radius: 50%;
+  background-color: var(--eink-bg);
+  font-family: var(--eink-font);
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.02em;
+  cursor: grab;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+.player:active {
+  cursor: grabbing;
+}
+
+/* Seleccionado: inversion total, sin sombras ni brillos */
+.player.is-selected {
+  background-color: var(--eink-text);
+  color: var(--eink-bg);
+}
+
+/* Etiqueta repetida: hay que resolverla a mano */
+.player.is-duplicate {
+  border-style: dashed;
+}
+
+/* Ya esta en la cancha: sigue visible en el panel, pero apagado */
+.player.is-placed {
+  color: var(--eink-accent);
+  border-color: var(--eink-accent);
+}
+
+/* ------------------------------------------------------- cards rotaciones */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+  gap: 20px;
+}
+
+.card {
+  border: 2px solid var(--eink-border);
+  padding: 10px;
+}
+
+.card__title {
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
+  margin: 0 0 0.6em;
+}
+
+.court--mini {
+  max-width: none;
+  border-width: 1px;
+}
+
+.court--mini .cell {
+  min-height: 58px;
+}
+
+.court--mini .cell__num {
+  display: none;
+}
+
+.court--mini .player {
+  width: 40px;
+  height: 40px;
+  font-size: 0.6rem;
+  border-width: 1px;
+  cursor: default;
+}
+
+/* --------------------------------------------------------------- estrecho */
+
+@media (max-width: 820px) {
+  .app {
+    grid-template-columns: 1fr;
+  }
+
+  .panel {
+    border-right: 0;
+    border-bottom: 2px solid var(--eink-border);
+  }
+}

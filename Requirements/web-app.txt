@@ -1,0 +1,16 @@
+Pagina Web o apliccion web
+Para dibujar posiciones dee jugadores en cancha de volleyball
+ver archivo en /data para estudiar el proceso manual
+de una lista, se seleccionan los jugadores que ingresan a la cancha
+se ubican en una posicion inicial, y luego se procede a dibujar
+las rotaciones
+
+Se espera,
+una pagina donde se pueda pegar la lista y/o escribir los nombres
+un boton que genere botones/boxes representando jugadores de la lista arrastrables a la cancha
+un boton generar rotaciones
+
+layout, panel lateral lista de jugadores y boxes
+main, grafico (cancha + jugadores), cada rotacion puede ser un card
+
+un jugador se representa con un circulo y su nombre truncado a 4 caracteres

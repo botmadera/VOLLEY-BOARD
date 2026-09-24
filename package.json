@@ -1,0 +1,14 @@
+{
+  "name": "coach-board",
+  "version": "1.0.0",
+  "private": true,
+  "license": "MIT",
+  "description": "Pizarra de rotaciones de voleibol. La app no usa npm: se abre index.html directamente. Esto existe solo para los tests.",
+  "scripts": {
+    "test": "node test/logic.test.js && node test/dom.test.js",
+    "test:logic": "node test/logic.test.js"
+  },
+  "devDependencies": {
+    "jsdom": "^27.0.0"
+  }
+}

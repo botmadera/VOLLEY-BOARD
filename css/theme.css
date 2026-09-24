@@ -1,0 +1,181 @@
+/* ==========================================================================
+   E-INK BASE THEME
+   Base tomada de Requirements/theme.txt.
+   Desviaciones deliberadas respecto al original:
+   1. html/body sin max-width ni padding: el layout panel + cancha necesita
+      todo el ancho. El ancho se limita por contenedor en app.css.
+   2. La regla anti-animacion es universal (*), no solo sobre body: un
+      transition:none !important en body no impide que un hijo anime.
+   3. Fondo claro siempre y Fira Mono en toda la pagina (ver abajo).
+   ========================================================================== */
+
+/* Fira Mono empaquetada en assets/fira (SIL Open Font License, ver OFL.txt).
+   font-display: block evita el cambio de fuente a media carga; con archivos
+   locales es inmediato y encaja con la regla de "nada cambia de forma
+   progresiva". */
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fira/FiraMono-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fira/FiraMono-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-style: normal;
+  font-display: block;
+}
+
+@font-face {
+  font-family: "Fira Mono";
+  src: url("../assets/fira/FiraMono-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-style: normal;
+  font-display: block;
+}
+
+:root {
+  /* Paleta de color: papel electronico, siempre en claro */
+  --eink-bg: #fafafa;
+  --eink-text: #1a1a1a;
+  --eink-border: #222222;
+  --eink-accent: #555555;
+
+  /* Fira Mono viene empaquetada arriba, no depende de que este instalada.
+     El resto de la lista solo actua si los .ttf faltan. */
+  --eink-font: "Fira Mono", ui-monospace, "Courier New", monospace;
+
+  /* Sin modo oscuro: la pagina va siempre en claro, tambien cuando el
+     sistema esta en oscuro. Esto ademas mantiene claros los controles
+     nativos (textarea, inputs, scrollbars). */
+  color-scheme: light;
+}
+
+/* Crucial: en una pantalla E Ink real todo cambia de golpe.
+   Cero transiciones, cero animaciones, en cualquier elemento. */
+*,
+*::before,
+*::after {
+  transition: none !important;
+  animation: none !important;
+  scroll-behavior: auto !important;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* Configuracion Global */
+html,
+body {
+  background-color: var(--eink-bg);
+  color: var(--eink-text);
+  font-family: var(--eink-font);
+  line-height: 1.6;
+  font-size: 17px;
+  margin: 0;
+
+  /* Elimina el suavizado excesivo para que la fuente se vea mas "impresa" */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Textura de papel: el PNG ya es practicamente blanco y neutro, se repite
+   tal cual sobre el color de fondo. */
+body {
+  background-image: url("../assets/groovepaper.png");
+  background-repeat: repeat;
+}
+
+/* Tipografias e Impresion */
+h1,
+h2,
+h3,
+h4 {
+  font-family: var(--eink-font);
+  color: var(--eink-text);
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+/* Enlaces y Botones */
+a {
+  color: var(--eink-text);
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  text-decoration-thickness: 2px;
+}
+
+a:hover {
+  background-color: var(--eink-text);
+  color: var(--eink-bg);
+  text-decoration: none;
+}
+
+button {
+  background-color: transparent;
+  color: var(--eink-text);
+  border: 2px solid var(--eink-border);
+  padding: 8px 16px;
+  font-family: var(--eink-font);
+  font-weight: bold;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+button:active {
+  background-color: var(--eink-text);
+  color: var(--eink-bg);
+}
+
+button:disabled {
+  color: var(--eink-accent);
+  border-color: var(--eink-accent);
+  cursor: not-allowed;
+}
+
+button:disabled:active {
+  background-color: transparent;
+  color: var(--eink-accent);
+}
+
+/* Elementos de Estructura e Imagenes */
+hr {
+  border: 0;
+  border-top: 2px solid var(--eink-border);
+  margin: 2em 0;
+}
+
+img {
+  filter: grayscale(100%) contrast(120%);
+  border: 1px solid var(--eink-border);
+  max-width: 100%;
+  height: auto;
+}
+
+/* Bloques de codigo o datos */
+pre,
+code {
+  font-family: var(--eink-font);
+  background-color: rgba(0, 0, 0, 0.05);
+  padding: 2px 6px;
+  border: 1px dashed var(--eink-border);
+}
+
+textarea,
+input {
+  background-color: transparent;
+  color: var(--eink-text);
+  border: 2px solid var(--eink-border);
+  font-family: var(--eink-font);
+  font-size: 0.8rem;
+  padding: 8px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--eink-text);
+  outline-offset: 2px;
+}
